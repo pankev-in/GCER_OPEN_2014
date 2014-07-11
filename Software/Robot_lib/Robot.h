@@ -22,7 +22,7 @@ class Robot {
 		void open();
 	
 	private:
-		int _grabbler;
+		Servo _grabbler;
 		
 		Motor _grabblerTurn;
 		int _grabblerTurnPosition;
@@ -30,8 +30,8 @@ class Robot {
 		Motor _armJoint;
 		int _armJointPosition;	
 		
-		int _armBase[];
-
+		Servo _armBase_left;
+		Servo _armBase_right;
 }
 
 #endif

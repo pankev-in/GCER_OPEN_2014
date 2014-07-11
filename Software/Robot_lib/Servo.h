@@ -6,8 +6,8 @@ class Servo {
 		void enable();
 		void disable();
 
-		void setPosition();
-		void getPosition();
+		void setPosition(int position);
+		int getPosition();
 
 	private:
 		int _position;

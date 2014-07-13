@@ -9,7 +9,7 @@ void setup()
 void loop()
 {
     digitalWrite(LED_PIN, HIGH);
-    delay(100);
+    delay(1000);
     digitalWrite(LED_PIN, LOW);
-    delay(900);
+    delay(2000);
 }

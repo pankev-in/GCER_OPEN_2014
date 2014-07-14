@@ -5,7 +5,7 @@ Roomba roomba(&Serial1);
 void setup()
 {
     roomba.start();
-    roomba.safeMode();
+    roomba.fullMode();
 }
 
 void loop()

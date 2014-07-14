@@ -1,13 +1,23 @@
-int led = 13;
+#include <Roomba.h>
+
+Roomba roomba(&Serial1);
+
 void setup()
 {
-  pinMode(led, OUTPUT);     
+    roomba.start();
+    roomba.safeMode();
 }
 
 void loop()
 {
-  digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);               // wait for a second
-  digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000);
+  roomba.driveDirect(300 , 300);   // Often the first call after restart is not registered. This is an ongoing problem with no known fix.
+  roomba.driveDirect(300 , 300);   // Left/Right Wheel velocity (mm/s)
+  delay(1000);
+  roomba.driveDirect(-300 , 300);  // Left/Right Wheel velocity (mm/s)
+  delay(1000);
+  roomba.driveDirect(300, -300);   // Left/Right Wheel velocity (mm/s)
   delay(1000);  
+  roomba.driveDirect(0, 0);        // Left/Right Wheel velocity (mm/s)
+  delay(2000);   
 }

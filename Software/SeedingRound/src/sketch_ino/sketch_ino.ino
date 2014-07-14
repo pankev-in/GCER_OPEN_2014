@@ -7,7 +7,7 @@ void setup()
 //    Serial.begin(9600);
      
     roomba.start();
-    roomba.safeMode();
+    roomba.fullMode();
 }
 
 void loop()

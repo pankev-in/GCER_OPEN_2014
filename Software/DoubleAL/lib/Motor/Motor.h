@@ -10,7 +10,8 @@
 class Motor {
 
 	public:
-		Motor(int pins[]);
+		Motor();
+		void attach(int en,int in1,int in2);
 		void forward(int speed);
 		void backward(int speed);
 		void floating();

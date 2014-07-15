@@ -1,6 +1,7 @@
 #include <Roomba.h>
 #include <Servo.h>
 #include <Motor.h>
+#include <Robot_Arm.h>
 
 
 // Defines the Roomba instance and the HardwareSerial it connected to:
@@ -13,13 +14,13 @@ Servo Servo1;
 Servo Servo2;
 int M1_Pins[]={4,50,51};
 int M2_Pins[]={5,52,53};
-Motor M1(M1_Pins);
-Motor M2(M2_Pins);
+Motor M1();
+Motor M2();
 
 //constance:
 int lightValue = 650;
-int Servo1_StartValue = 100;
-int Servo2_StartValue = 110;
+//int Servo1_StartValue = 100;
+//int Servo2_StartValue = 110;
 
 //variables
 int light = 0;

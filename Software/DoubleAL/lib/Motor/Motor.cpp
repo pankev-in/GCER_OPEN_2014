@@ -1,15 +1,18 @@
 #include "Arduino.h"
 #include "Motor.h"
 
-Motor::Motor(int pins[]) {
-	pinMode(pins[0], OUTPUT);
-	pinMode(pins[1], OUTPUT);
-	pinMode(pins[2], OUTPUT);
+Motor::Motor() {
+}
+
+void Motor::attach(int en,int in1,int in2){
+	pinMode(en, OUTPUT);
+	pinMode(in1, OUTPUT);
+	pinMode(in2, OUTPUT);
     
-	_EN = pins[0];
-	_IN1 = pins[1];
-	_IN2 = pins[2];
-    
+	_EN = en;
+	_IN1 = in1;
+	_IN2 = in2;
+
 }
 
 void Motor::forward(int speed) {

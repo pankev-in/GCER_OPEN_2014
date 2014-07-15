@@ -28,6 +28,8 @@ void setup()
 void loop()
 {
   
+  
+  
   /*
     Position adjusting and wait for light
   */
@@ -44,23 +46,42 @@ void loop()
   }
   
   
+  
+  
   /*
     Start moving
   */
   Serial.println("\n\nStarts running...");
   for(int i=50;i<=350;i=i+50){
+    Serial.print("Speed:");
     Serial.println(i);
     roomba.driveDirect(i,i);
     delay(500);
   }
 
+
+  /*
+    goes to the blacktape
+  */
+  Serial.println("Finding Black tape");
   uint8_t buf[2];
-  while(roomba.getSensors(29,buf,2)){            // packetID, destination, length (bytes) 
-    u = BitShiftCombine(buf[0], buf[1]);        // Value sent as 16 bit signed value high byte first.
-      if(u>=2000){break;}
-    delay(500);
+  while(roomba.getSensors(29,buf,2)){              //PacketID for left front cliff=29, 2 byte data      
+      u = BitShiftCombine(buf[0], buf[1]);        
+      if(u>=200){break;}                           //Black tape value
+      Serial.print("Value:");
+      Serial.println(u);
+    delay(100);
    }
-  roomba.driveDirect(0,0);
+  roomba.driveDirect(0,0);                         //Stops moving and delays for 0.5s
+  delay(500);
+  turnLeft();                                      //turns 90 Degrees
+
+  
+  /*
+    
+  */
+  
+  
   
   while(true){
     Serial.println("Stoped Moving");
@@ -79,6 +100,18 @@ int BitShiftCombine( unsigned char x_high, unsigned char x_low)
   combined |= x_low;                 //logical OR keeps x_high intact in combined and fills in rightmost 8 bits 
   return combined;
 
+}
+
+void turnLeft(){
+     roomba.drive(225, roomba.DriveInPlaceCounterClockwise);
+     delay(1000);
+     roomba.driveDirect(0,0);
+}
+
+void turnRight(){
+    roomba.drive(225,roomba.DriveInPlaceClockwise);
+    delay(1000);  
+    roomba.driveDirect(0,0);
 }
 
 

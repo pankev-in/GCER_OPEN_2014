@@ -28,7 +28,7 @@
 #define NUM_SERVO_BACK_ZERO_DEGREE 110
 #define NUM_SERVO_GRAB_CLOSE 20
 #define NUM_SERVO_GRAB_OPEN 100
-#define NUM_POTENTIOMETER_1_ZERO_DEGREE 450
+#define NUM_POTENTIOMETER_1_ZERO_DEGREE 555
 #define NUM_POTENTIOMETER_2_ZERO_DEGREE 450
 #define NUM_ROOMBA_TURN_SPEED 213
 #define NUM_LIGHT_SENSOR_VALUE 40
@@ -136,44 +136,52 @@ void PrimaryArmPosition(int Angle) {
   }
 }
 
-// Turn Secondary arm in to an specific angle between -135 to 135 degree:
+// Turn Secondary arm in to an specific angle between -110 to 110 degree:
 // Status: Unfinished
 void SecondaryArmPosition(int Angle){
-  if(Angle>135||Angle<-135){return 0;}
 
+  
+
+  int value = CheckSecondaryArmAngle(); 
+
+  if(Angle < value && Angle > ) { 
+
+  } else if (Angle < -110){
+
+  }else {return 0;}
 }
 
-// Turn the Grabber in to an specific angle between -135 to 135 degree:
+// Turn the Grabber in to an specific angle between -110 to 110 degree:
 // Status: Unfinished
 void GrabBasePosition(int Angle){
-  if(Angle>135||Angle<-135){return 0;}
+  if(Angle>110||Angle<-110){return 0;}
 
 }
 
 // Returns the Angle of the grabbler:
-// Status: Untested
+// Status: TESTED
 int CheckGrabAngle(){
   int value=analogRead(POTENTIOMETER_2_PIN);
-  value=map((value+511-NUM_POTENTIOMETER_2_ZERO_DEGREE),0,1023,-135,135);
+  value=map((value+511-NUM_POTENTIOMETER_2_ZERO_DEGREE),0,1023,-110,100);
   return value;
 }
 
 // Returns the Angle of the secondary Arm:
-// Status: Untested
+// Status: TESTED
 int CheckSecondaryArmAngle(){
   int value=analogRead(POTENTIOMETER_1_PIN);
-  value=map((value+511-NUM_POTENTIOMETER_2_ZERO_DEGREE),0,1023,-135,135);
+  value=map((value+511-NUM_POTENTIOMETER_2_ZERO_DEGREE),0,1023,-110,100);
   return value;
 }
 
 // Open the grabbler:
-// Status: Untested
+// Status: TESTED
 void OpenGrab(){
   SERVO_GRAB.write(NUM_SERVO_GRAB_OPEN);
 }
 
 // Open the grabbler:
-// Status: Untested
+// Status: TESTED
 void CloseGrab(){
   SERVO_GRAB.write(NUM_SERVO_GRAB_CLOSE);
 }

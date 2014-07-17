@@ -140,15 +140,19 @@ void PrimaryArmPosition(int Angle) {
 // Status: Unfinished
 void SecondaryArmPosition(int Angle){
 
-  
+  if(Angle > 110 || Angle < -110) return 0;  
 
-  int value = CheckSecondaryArmAngle(); 
+  int dif = Angle - CheckSecondaryArmAngle(); 
 
-  if(Angle < value && Angle > ) { 
+  if(dif < 0) { 
+    
+    M1.backward(100);
+  } else if(dif > 0) {
+    M1.forward(100);
+  } else return 0;
 
-  } else if (Angle < -110){
-
-  }else {return 0;}
+  while(Angle - CheckSecondaryArmAngle() > 5) delay(10);
+  M1.brake();
 }
 
 // Turn the Grabber in to an specific angle between -110 to 110 degree:
@@ -156,6 +160,17 @@ void SecondaryArmPosition(int Angle){
 void GrabBasePosition(int Angle){
   if(Angle>110||Angle<-110){return 0;}
 
+  int dif = Angle - CheckGrabAngle();
+
+   if(dif < 0) {
+       
+     M2.backward(100);
+   } else if(dif > 0) {
+     M1.forward(100);
+   } else return 0;
+		     
+   while(Angle - CheckSecondaryArmAngle() > 5) delay(10);
+   M1.brake();
 }
 
 // Returns the Angle of the grabbler:

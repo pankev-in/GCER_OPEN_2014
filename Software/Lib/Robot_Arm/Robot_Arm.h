@@ -11,8 +11,8 @@
 
 #define Servo1_StartValue 100
 #define Servo2_StartValue 110
-#define GrabCloseValue 180
-#define GrabOpenValue 0
+#define GrabCloseValue 20
+#define GrabOpenValue 100
 
 
 class Robot_Arm {

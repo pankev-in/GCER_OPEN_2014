@@ -5,14 +5,14 @@ Motor::Motor() {
 }
 
 void Motor::attach(int en,int in1,int in2){
-	pinMode(en, OUTPUT);
-	pinMode(in1, OUTPUT);
-	pinMode(in2, OUTPUT);
-    
 	_EN = en;
 	_IN1 = in1;
 	_IN2 = in2;
 
+    pinMode(en, OUTPUT);
+	pinMode(in1, OUTPUT);
+	pinMode(in2, OUTPUT);
+    
 }
 
 void Motor::forward(int speed) {

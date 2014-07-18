@@ -10,25 +10,25 @@
 #include <Motor.h>
 
 //Pin connections:
-#define M1_EN_PIN 4
-#define M1_INA_PIN 50
-#define M1_INB_PIN 51
-#define M2_EN_PIN 5
-#define M2_INA_PIN 52
-#define M2_INB_PIN  53
-#define SERVO_FRONT_PIN  6
-#define SERVO_BACK_PIN  7
-#define SERVO_GRAB_PIN  8
+#define M1_EN_PIN 2
+#define M1_INA_PIN 22
+#define M1_INB_PIN 23
+#define M2_EN_PIN 3
+#define M2_INA_PIN 24
+#define M2_INB_PIN  25
+#define SERVO_FRONT_PIN  4
+#define SERVO_BACK_PIN  5
+#define SERVO_GRAB_PIN  6
 #define LIGHT_SENSOR_PIN  0
 #define POTENTIOMETER_1_PIN  1
 #define POTENTIOMETER_2_PIN  2
 
 //Constants:
-#define NUM_SERVO_FRONT_ZERO_DEGREE 100
-#define NUM_SERVO_BACK_ZERO_DEGREE 110
+#define NUM_SERVO_FRONT_ZERO_DEGREE 90
+#define NUM_SERVO_BACK_ZERO_DEGREE 95
 #define NUM_SERVO_GRAB_CLOSE 20
 #define NUM_SERVO_GRAB_OPEN 100
-#define NUM_POTENTIOMETER_1_ZERO_DEGREE 555
+#define NUM_POTENTIOMETER_1_ZERO_DEGREE 500
 #define NUM_POTENTIOMETER_2_ZERO_DEGREE 450
 #define NUM_ROOMBA_TURN_SPEED 213
 #define NUM_LIGHT_SENSOR_VALUE 40
@@ -127,9 +127,9 @@ int BitShiftCombine( unsigned char x_high, unsigned char x_low)
 */
 
 // Turn Primary arm in to an specific angle between -45 to 45 degree:
-// Status: Untested
+// Status: TESTED
 void PrimaryArmPosition(int Angle) {
-  if(Angle>45||Angle<-45){return 0;}
+  if(Angle>45||Angle<-45){return;}
   else{
 	SERVO_FRONT.write(NUM_SERVO_FRONT_ZERO_DEGREE - Angle);
  	SERVO_BACK.write(NUM_SERVO_BACK_ZERO_DEGREE + Angle);
@@ -137,10 +137,10 @@ void PrimaryArmPosition(int Angle) {
 }
 
 // Turn Secondary arm in to an specific angle between -110 to 110 degree:
-// Status: Unfinished
+// Status: Untested
 void SecondaryArmPosition(int Angle){
 
-  if(Angle > 110 || Angle < -110) return 0;  
+  if(Angle > 110 || Angle < -110) return;  
 
   int dif = Angle - CheckSecondaryArmAngle(); 
 
@@ -149,16 +149,16 @@ void SecondaryArmPosition(int Angle){
     M1.backward(100);
   } else if(dif > 0) {
     M1.forward(100);
-  } else return 0;
+  } else return;
 
   while(Angle - CheckSecondaryArmAngle() > 5) delay(10);
   M1.brake();
 }
 
 // Turn the Grabber in to an specific angle between -110 to 110 degree:
-// Status: Unfinished
+// Status: Untested
 void GrabBasePosition(int Angle){
-  if(Angle>110||Angle<-110){return 0;}
+  if(Angle>110||Angle<-110){return;}
 
   int dif = Angle - CheckGrabAngle();
 
@@ -167,7 +167,7 @@ void GrabBasePosition(int Angle){
      M2.backward(100);
    } else if(dif > 0) {
      M1.forward(100);
-   } else return 0;
+   } else return;
 		     
    while(Angle - CheckSecondaryArmAngle() > 5) delay(10);
    M1.brake();

@@ -59,6 +59,36 @@ void setup() {
 
 void loop() {
 
+    Serial.println("aligning at gametable..");
+    roomba.driveDirect(-50, -50);
+    primaryArmPosition(0);
+    secondaryArmPosition(120);
+    
+    delay(2000);
+    
+    roomba.driveDirect(0, 0);
+    
+    Serial.println("waiting for light...");
+    while(analogRead(LIGHT_SENSOR_PIN) > NUM_LIGHT_SENSOR_VALUE) delay(10);
+    Serial.println("Go!");
+    
+    roomba.driveDirect(150, 150);
+    
+    uint8_t buf[2];
+    while(roomba.getSensors(29, buf, 2)) {
+        
+        u = bitShiftCombine(buf[0], buf[1]);
+        if(u >= 200) {
+            
+            break;
+        }
+        
+        Serial.print("cliff value: ");
+        Serial.println(u);
+        delay(100);
+    }
+    
+    turnLeft();
     
 }
 
@@ -128,7 +158,7 @@ int bitShiftCombine( unsigned char x_high, unsigned char x_low) {
 // Status: TESTED
 void primaryArmPosition(int Angle) {
     
-  if(Angle>45||Angle<-45) return;
+  if(Angle > 45||Angle < -45) return;
   else{
       
 	SERVO_FRONT.write(NUM_SERVO_FRONT_ZERO_DEGREE - Angle);
@@ -208,6 +238,10 @@ void closeGrab(){
   SERVO_GRAB.write(NUM_SERVO_GRAB_CLOSE);
 }
 
+bool checkGrabTouch() {
+    
+    return false;
+}
 
 
 

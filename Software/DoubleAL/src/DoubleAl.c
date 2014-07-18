@@ -19,6 +19,7 @@
 #define SERVO_FRONT_PIN  4
 #define SERVO_BACK_PIN  5
 #define SERVO_GRAB_PIN  6
+#define SERVO_DEFENSE_PIN 7
 #define LIGHT_SENSOR_PIN  0
 #define POTENTIOMETER_1_PIN  1
 #define POTENTIOMETER_2_PIN  2
@@ -177,7 +178,7 @@ void GrabBasePosition(int Angle){
 // Status: TESTED
 int CheckGrabAngle(){
   int value=analogRead(POTENTIOMETER_2_PIN);
-  value=map((value+511-NUM_POTENTIOMETER_2_ZERO_DEGREE),0,1023,-110,100);
+  value=int((value-NUM_POTENTIOMETER_2_ZERO_DEGREE)/(1023/230));
   return value;
 }
 
@@ -185,9 +186,8 @@ int CheckGrabAngle(){
 // Status: TESTED
 int CheckSecondaryArmAngle(){
   int value=analogRead(POTENTIOMETER_1_PIN);
-  value=map((value+511-NUM_POTENTIOMETER_2_ZERO_DEGREE),0,1023,-110,100);
-  return value;
-}
+  value=int((value-NUM_POTENTIOMETER_1_ZERO_DEGREE)/(1023/230));
+  return value;}
 
 // Open the grabbler:
 // Status: TESTED

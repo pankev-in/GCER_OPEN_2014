@@ -40,32 +40,26 @@ Roomba roomba (&Serial1);
 Servo SERVO_FRONT;
 Servo SERVO_BACK;
 Servo SERVO_GRAB;
-Motor M1;
-Motor M2;
+Motor m1;
+Motor m2;
 
 void setup() {
-  Serial.begin(57600);
-  //Serial.println("Serial communication established")
-  SERVO_FRONT.attach(SERVO_FRONT_PIN);
-  SERVO_BACK.attach(SERVO_BACK_PIN);
-  SERVO_GRAB.attach(SERVO_GRAB_PIN);
-  M1.attach(M1_EN_PIN,M1_INA_PIN,M1_INB_PIN);
-  M2.attach(M2_EN_PIN,M2_INA_PIN,M2_INB_PIN);
-  //roomba.start();
-  //roomba.safeMode();
-  //roomba.fullMode();
+    
+    Serial.begin(57600);
+    //Serial.println("Serial communication established")
+    SERVO_FRONT.attach(SERVO_FRONT_PIN);
+    SERVO_BACK.attach(SERVO_BACK_PIN);
+    SERVO_GRAB.attach(SERVO_GRAB_PIN);
+    m1.attach(M1_EN_PIN, M1_INA_PIN, M1_INB_PIN);
+    m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
+    //roomba.start();
+    //roomba.safeMode();
+    //roomba.fullMode();
 }
 
-void loop(){
+void loop() {
 
-
-
-
-
-
-
-
-
+    
 }
 
 /*
@@ -82,26 +76,29 @@ void loop(){
 
 // Roomba Creat turns Right(Clock wise):
 // Status: TESTED
-void TurnRight(){
-  roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceClockwise);
-  delay(1000);
-  roomba.driveDirect(0, 0);
+void TurnRight() {
+    
+    roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceClockwise);
+    delay(1000);
+    roomba.driveDirect(0, 0);
 }
 
 // Roomba Creat turns left(Inclock wise):
 // Status: TESTED
-void TurnLeft(){
-  roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceCounterClockwise);
-  delay(1000);
-  roomba.driveDirect(0, 0);
+void TurnLeft() {
+    
+    roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceCounterClockwise);
+    delay(1000);
+    roomba.driveDirect(0, 0);
 }
 
 // Roomba Creat turns 180(Clock wise):
 // Status: TESTED
-void TurnAround(){
-  roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceClockwise);
-  delay(2000);
-  roomba.driveDirect(0, 0);
+void TurnAround() {
+    
+    roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceClockwise);
+    delay(2000);
+    roomba.driveDirect(0, 0);
 }
 
 /*
@@ -112,13 +109,13 @@ void TurnAround(){
 
 // Shifting two unsigned int* together, Need for sensor data read:
 // Status: TESTED
-int BitShiftCombine( unsigned char x_high, unsigned char x_low)
-{
-  int combined;
-  combined = x_high;             	 //send x_high to rightmost 8 bits
-  combined = combined << 8;     	 //shift x_high over to leftmost 8 bits
-  combined |= x_low;           		 //logical OR keeps x_high intact in combined and fills in rightmost 8 bits
-  return combined;
+int BitShiftCombine( unsigned char x_high, unsigned char x_low) {
+    
+    int combined;
+    combined = x_high;             	 //send x_high to rightmost 8 bits
+    combined = combined << 8;     	 //shift x_high over to leftmost 8 bits
+    combined |= x_low;               //logical OR keeps x_high intact in combined and fills in rightmost 8 bits
+    return combined;
 }
 
 /*
@@ -130,8 +127,10 @@ int BitShiftCombine( unsigned char x_high, unsigned char x_low)
 // Turn Primary arm in to an specific angle between -45 to 45 degree:
 // Status: TESTED
 void PrimaryArmPosition(int Angle) {
-  if(Angle>45||Angle<-45){return;}
+    
+  if(Angle>45||Angle<-45) return;
   else{
+      
 	SERVO_FRONT.write(NUM_SERVO_FRONT_ZERO_DEGREE - Angle);
  	SERVO_BACK.write(NUM_SERVO_BACK_ZERO_DEGREE + Angle);
   }
@@ -139,65 +138,73 @@ void PrimaryArmPosition(int Angle) {
 
 // Turn Secondary arm in to an specific angle between -110 to 110 degree:
 // Status: Untested
-void SecondaryArmPosition(int Angle){
+void SecondaryArmPosition(int angle){
 
-  if(Angle > 110 || Angle < -110) return;  
+    if(angle > 110 || angle < -110) return;
 
-  int dif = Angle - CheckSecondaryArmAngle(); 
+    int dif = angle - checkSecondaryArmAngle();
 
-  if(dif < 0) { 
+    if(dif < 0) {
     
-    M1.backward(100);
-  } else if(dif > 0) {
-    M1.forward(100);
-  } else return;
+        m1.backward(100);
+    } else if(dif > 0) {
+      
+        m1.forward(100);
+    } else return;
 
-  while(Angle - CheckSecondaryArmAngle() > 5) delay(10);
-  M1.brake();
+    while(angle - checkSecondaryArmAngle() > 5) delay(10);
+    m1.brake();
 }
 
 // Turn the Grabber in to an specific angle between -110 to 110 degree:
 // Status: Untested
-void GrabBasePosition(int Angle){
-  if(Angle>110||Angle<-110){return;}
+void GrabBasePosition(int angle) {
+    
+    if(angle > 110 || angle < -110) return;
 
-  int dif = Angle - CheckGrabAngle();
+    int dif = angle - checkGrabAngle();
 
-   if(dif < 0) {
+    if(dif < 0) {
        
-     M2.backward(100);
-   } else if(dif > 0) {
-     M1.forward(100);
-   } else return;
+        m2.backward(100);
+    } else if(dif > 0) {
+        
+        m1.forward(100);
+    } else return;
 		     
-   while(Angle - CheckSecondaryArmAngle() > 5) delay(10);
-   M1.brake();
+    while(angle - checkSecondaryArmAngle() > 5) delay(10);
+    m1.brake();
 }
 
 // Returns the Angle of the grabbler:
 // Status: TESTED
-int CheckGrabAngle(){
-  int value=analogRead(POTENTIOMETER_2_PIN);
-  value=int((value-NUM_POTENTIOMETER_2_ZERO_DEGREE)/(1023/230));
-  return value;
+int CheckGrabAngle() {
+    
+    int value = analogRead(POTENTIOMETER_2_PIN);
+    value = int((value-NUM_POTENTIOMETER_2_ZERO_DEGREE) / (1023 / 230));
+    return value;
 }
 
 // Returns the Angle of the secondary Arm:
 // Status: TESTED
 int CheckSecondaryArmAngle(){
-  int value=analogRead(POTENTIOMETER_1_PIN);
-  value=int((value-NUM_POTENTIOMETER_1_ZERO_DEGREE)/(1023/230));
-  return value;}
+    
+    int value = analogRead(POTENTIOMETER_1_PIN);
+    value = int((value-NUM_POTENTIOMETER_1_ZERO_DEGREE) / (1023 / 230));
+    return value;
+}
 
 // Open the grabbler:
 // Status: TESTED
 void OpenGrab(){
+    
   SERVO_GRAB.write(NUM_SERVO_GRAB_OPEN);
 }
 
 // Open the grabbler:
 // Status: TESTED
 void CloseGrab(){
+    
   SERVO_GRAB.write(NUM_SERVO_GRAB_CLOSE);
 }
 

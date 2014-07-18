@@ -76,7 +76,7 @@ void loop() {
 
 // Roomba Creat turns Right(Clock wise):
 // Status: TESTED
-void TurnRight() {
+void turnRight() {
     
     roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceClockwise);
     delay(1000);
@@ -85,7 +85,7 @@ void TurnRight() {
 
 // Roomba Creat turns left(Inclock wise):
 // Status: TESTED
-void TurnLeft() {
+void turnLeft() {
     
     roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceCounterClockwise);
     delay(1000);
@@ -94,7 +94,7 @@ void TurnLeft() {
 
 // Roomba Creat turns 180(Clock wise):
 // Status: TESTED
-void TurnAround() {
+void turnAround() {
     
     roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceClockwise);
     delay(2000);
@@ -109,7 +109,7 @@ void TurnAround() {
 
 // Shifting two unsigned int* together, Need for sensor data read:
 // Status: TESTED
-int BitShiftCombine( unsigned char x_high, unsigned char x_low) {
+int bitShiftCombine( unsigned char x_high, unsigned char x_low) {
     
     int combined;
     combined = x_high;             	 //send x_high to rightmost 8 bits
@@ -126,7 +126,7 @@ int BitShiftCombine( unsigned char x_high, unsigned char x_low) {
 
 // Turn Primary arm in to an specific angle between -45 to 45 degree:
 // Status: TESTED
-void PrimaryArmPosition(int Angle) {
+void primaryArmPosition(int Angle) {
     
   if(Angle>45||Angle<-45) return;
   else{
@@ -138,7 +138,7 @@ void PrimaryArmPosition(int Angle) {
 
 // Turn Secondary arm in to an specific angle between -110 to 110 degree:
 // Status: Untested
-void SecondaryArmPosition(int angle){
+void secondaryArmPosition(int angle){
 
     if(angle > 110 || angle < -110) return;
 
@@ -158,7 +158,7 @@ void SecondaryArmPosition(int angle){
 
 // Turn the Grabber in to an specific angle between -110 to 110 degree:
 // Status: Untested
-void GrabBasePosition(int angle) {
+void grabBasePosition(int angle) {
     
     if(angle > 110 || angle < -110) return;
 
@@ -178,7 +178,7 @@ void GrabBasePosition(int angle) {
 
 // Returns the Angle of the grabbler:
 // Status: TESTED
-int CheckGrabAngle() {
+int checkGrabAngle() {
     
     int value = analogRead(POTENTIOMETER_2_PIN);
     value = int((value-NUM_POTENTIOMETER_2_ZERO_DEGREE) / (1023 / 230));
@@ -187,7 +187,7 @@ int CheckGrabAngle() {
 
 // Returns the Angle of the secondary Arm:
 // Status: TESTED
-int CheckSecondaryArmAngle(){
+int checkSecondaryArmAngle(){
     
     int value = analogRead(POTENTIOMETER_1_PIN);
     value = int((value-NUM_POTENTIOMETER_1_ZERO_DEGREE) / (1023 / 230));
@@ -196,14 +196,14 @@ int CheckSecondaryArmAngle(){
 
 // Open the grabbler:
 // Status: TESTED
-void OpenGrab(){
+void openGrab(){
     
   SERVO_GRAB.write(NUM_SERVO_GRAB_OPEN);
 }
 
 // Open the grabbler:
 // Status: TESTED
-void CloseGrab(){
+void closeGrab(){
     
   SERVO_GRAB.write(NUM_SERVO_GRAB_CLOSE);
 }

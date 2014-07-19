@@ -1,4 +1,12 @@
+#include <Arduino.h>
 #include <Roomba.h>
+void setup();
+void loop();
+int BitShiftCombine( unsigned char x_high, unsigned char x_low);
+int CheckGrabAngle();
+int CheckSecondaryArmAngle();
+#line 1 "src/sketch.ino"
+//#include <Roomba.h>
 
 #define NUM_POTENTIOMETER_1_ZERO_DEGREE 330
 #define NUM_POTENTIOMETER_2_ZERO_DEGREE 310

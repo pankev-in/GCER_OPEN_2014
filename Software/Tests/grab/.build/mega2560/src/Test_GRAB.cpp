@@ -1,7 +1,14 @@
+#include <Arduino.h>
 #include <Servo.h>
+void setup();
+void loop();
+void OpenGrab();
+void CloseGrab();
+#line 1 "src/Test_GRAB.ino"
+//#include <Servo.h>
 
 Servo SERVO_GRAB;
-#define NUM_SERVO_GRAB_CLOSE 20
+#define NUM_SERVO_GRAB_CLOSE 0
 #define NUM_SERVO_GRAB_OPEN 100
 #define SERVO_GRAB_PIN  6
 
@@ -13,7 +20,7 @@ void loop(){
   OpenGrab();
   delay(1000);
   CloseGrab();
-  delay(1000);
+  delay(5000);
 }
 
 void OpenGrab(){

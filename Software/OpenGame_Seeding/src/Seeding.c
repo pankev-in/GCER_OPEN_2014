@@ -10,16 +10,16 @@
 #include <Motor.h>
 
 //Pin connections:
-#define M1_EN_PIN 3
+#define M1_EN_PIN 2
 #define M1_INA_PIN 22
 #define M1_INB_PIN 23
-#define M2_EN_PIN 4
+#define M2_EN_PIN 3
 #define M2_INA_PIN 24
 #define M2_INB_PIN  25
-#define SERVO_FRONT_PIN  5
-#define SERVO_BACK_PIN  6
-#define SERVO_GRAB_PIN  7
-#define SERVO_DEFENSE_PIN 8
+#define SERVO_FRONT_PIN  4
+#define SERVO_BACK_PIN  5
+#define SERVO_GRAB_PIN  6
+#define SERVO_DEFENSE_PIN 7
 #define LIGHT_SENSOR_PIN  0
 #define POTENTIOMETER_1_PIN  1
 #define POTENTIOMETER_2_PIN  2
@@ -27,10 +27,10 @@
 //Constants:
 #define NUM_SERVO_FRONT_ZERO_DEGREE 90
 #define NUM_SERVO_BACK_ZERO_DEGREE 95
-#define NUM_SERVO_GRAB_CLOSE 20
+#define NUM_SERVO_GRAB_CLOSE 0
 #define NUM_SERVO_GRAB_OPEN 100
-#define NUM_POTENTIOMETER_1_ZERO_DEGREE 500
-#define NUM_POTENTIOMETER_2_ZERO_DEGREE 450
+#define NUM_POTENTIOMETER_1_ZERO_DEGREE 330
+#define NUM_POTENTIOMETER_2_ZERO_DEGREE 310
 #define NUM_ROOMBA_TURN_SPEED 213
 #define NUM_LIGHT_SENSOR_VALUE 40
 #define NUM_CLIFF_BLACKTAPE_VALUE 200
@@ -217,19 +217,17 @@ void grabBasePosition(int angle) {
 // Status: TESTED
 int checkGrabAngle() {
     
-    int value = analogRead(POTENTIOMETER_2_PIN);
-    value = int((value-NUM_POTENTIOMETER_2_ZERO_DEGREE) / (1023 / 230));
-    return value;
+   	int value=analogRead(POTENTIOMETER_2_PIN);
+	value=map(value,0,697,-93,115);
+  	return value;
 }
 
 // Returns the Angle of the secondary Arm:
 // Status: TESTED
 int checkSecondaryArmAngle(){
-    
-    int value = analogRead(POTENTIOMETER_1_PIN);
-    value = int((value-NUM_POTENTIOMETER_1_ZERO_DEGREE) / (1023 / 230));
-    return value;
-}
+   	int value=analogRead(POTENTIOMETER_1_PIN);
+   	value=map(value,0,697,-98,108);
+   	return value;}
 
 // Open the grabbler:
 // Status: TESTED

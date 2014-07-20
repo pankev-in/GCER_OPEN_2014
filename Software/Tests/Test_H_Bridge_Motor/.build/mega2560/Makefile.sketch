@@ -1,0 +1,14 @@
+
+
+
+
+
+.build/mega2560/src/Test_H_Bridge_Motor.cpp : src/Test_H_Bridge_Motor.ino
+	@mkdir -p .build/mega2560/src
+	@echo [93msrc/Test_H_Bridge_Motor.ino[0m
+	@/usr/local/bin/ino preproc  -o $@ $^
+
+
+all : .build/mega2560/src/Test_H_Bridge_Motor.cpp
+	@true
+

@@ -45,7 +45,7 @@ Motor m2;
 
 void setup() {
     
-    Serial.begin(57600);
+    Serial.begin(9600);
     Serial.println("Serial communication established");
 	/*
     SERVO_FRONT.attach(SERVO_FRONT_PIN);
@@ -53,7 +53,7 @@ void setup() {
     SERVO_GRAB.attach(SERVO_GRAB_PIN);
     */
 	m1.attach(M1_EN_PIN, M1_INA_PIN, M1_INB_PIN);
-	//m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
+	m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
 	
     //roomba.start();
     //roomba.safeMode();
@@ -93,9 +93,9 @@ void loop() {
     }
     */
 	Serial.println("Forward");
-	m1.forward(255);
+	m2.forward(255);
 	delay(1000);
-	m1.brake();
+	m2.brake();
 	while(true){delay(1000);}
 }
 
@@ -203,7 +203,7 @@ void grabBasePosition(int angle) {
 
     if(dif < 0) {
        
-        m2.backward(100);
+        m2.f(100);
     } else if(dif > 0) {
         
         m1.forward(100);

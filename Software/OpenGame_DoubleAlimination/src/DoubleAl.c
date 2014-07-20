@@ -30,7 +30,11 @@
 #define NUM_SERVO_GRAB_CLOSE 0
 #define NUM_SERVO_GRAB_OPEN 100
 #define NUM_POTENTIOMETER_1_ZERO_DEGREE 330
+#define NUM_POTENTIOMETER_1_MAX_ANGLE 108
+#define NUM_POTENTIOMETER_1_MIN_ANGLE -98
 #define NUM_POTENTIOMETER_2_ZERO_DEGREE 310
+#define NUM_POTENTIOMETER_2_MAX_ANGLE 115
+#define NUM_POTENTIOMETER_2_MIN_ANGLE -93
 #define NUM_ROOMBA_TURN_SPEED 213
 #define NUM_LIGHT_SENSOR_VALUE 40
 #define NUM_CLIFF_BLACKTAPE_VALUE 200
@@ -45,7 +49,7 @@ Motor m2;
 
 void setup() {
     
-    Serial.begin(57600);
+    Serial.begin(9600);
     Serial.println("Serial communication established");
 	/*
     SERVO_FRONT.attach(SERVO_FRONT_PIN);
@@ -53,7 +57,7 @@ void setup() {
     SERVO_GRAB.attach(SERVO_GRAB_PIN);
     */
 	m1.attach(M1_EN_PIN, M1_INA_PIN, M1_INB_PIN);
-	//m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
+	m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
 	
     //roomba.start();
     //roomba.safeMode();
@@ -93,9 +97,9 @@ void loop() {
     }
     */
 	Serial.println("Forward");
-	m1.forward(255);
+	m2.forward(255);
 	delay(1000);
-	m1.brake();
+	m2.brake();
 	while(true){delay(1000);}
 }
 
@@ -176,41 +180,49 @@ void primaryArmPosition(int Angle) {
 // Turn Secondary arm in to an specific angle between -110 to 110 degree:
 // Status: Untested
 void secondaryArmPosition(int angle){
-
-    if(angle > 110 || angle < -110) return;
-
-    int dif = angle - checkSecondaryArmAngle();
-
-    if(dif < 0) {
-    
-        m1.backward(100);
-    } else if(dif > 0) {
-      
-        m1.forward(100);
-    } else return;
-
-    while(angle - checkSecondaryArmAngle() > 5) delay(10);
+	
+	if(angle > NUM_POTENTIOMETER_1_MAX_ANGLE || angle < NUM_POTENTIOMETER_1_MIN_ANGLE){		//Check if the input angle is posible
+		return;
+	}
+	int diff =angle - checkSecondaryArmAngle();		//calculate the difference
+	if(diff<5&&diff>-5){
+		Serial.println("Secondary Arm is not going to turn.");
+		Serial.print("Diff:");Serial.println(diff);
+	}
+	else if(diff<0){
+		m1.forward(255);
+	}
+	else if(diff>0){
+		m1.backward(255);
+	}
+	while(diff>5||diff<-5){
+        diff =angle - checkSecondaryArmAngle();
+	}
     m1.brake();
 }
 
 // Turn the Grabber in to an specific angle between -110 to 110 degree:
 // Status: Untested
 void grabBasePosition(int angle) {
-    
-    if(angle > 110 || angle < -110) return;
-
-    int dif = angle - checkGrabAngle();
-
-    if(dif < 0) {
-       
-        m2.backward(100);
-    } else if(dif > 0) {
-        
-        m1.forward(100);
-    } else return;
-		     
-    while(angle - checkSecondaryArmAngle() > 5) delay(10);
-    m1.brake();
+	
+	if(angle > NUM_POTENTIOMETER_2_MAX_ANGLE || angle < NUM_POTENTIOMETER_2_MIN_ANGLE){		//Check if the input angle is posible
+		return;
+	}
+	int diff =angle - checkGrabAngle();		//calculate the difference
+	if(diff<5&&diff>-5){
+		Serial.println("Grab is not going to turn.");
+		Serial.print("Diff:");Serial.println(diff);
+	}
+	else if(diff<0){
+		m2.backward(200);       //Here is Backward!!!!
+	}
+	else if(diff>0){
+		m2.forward(200);
+	}
+	while(diff>5||diff<-5){
+        diff =angle - checkGrabAngle();
+	}
+    m2.brake();
 }
 
 // Returns the Angle of the grabbler:
@@ -218,7 +230,7 @@ void grabBasePosition(int angle) {
 int checkGrabAngle() {
     
    	int value=analogRead(POTENTIOMETER_2_PIN);
-	value=map(value,0,697,-93,115);
+	value=map(value,0,697,NUM_POTENTIOMETER_2_MIN_ANGLE,NUM_POTENTIOMETER_2_MAX_ANGLE);
   	return value;
 }
 
@@ -226,7 +238,7 @@ int checkGrabAngle() {
 // Status: TESTED
 int checkSecondaryArmAngle(){
    	int value=analogRead(POTENTIOMETER_1_PIN);
-   	value=map(value,0,697,-98,108);
+   	value=map(value,0,697,NUM_POTENTIOMETER_1_MIN_ANGLE,NUM_POTENTIOMETER_1_MAX_ANGLE);
    	return value;}
 
 // Open the grabbler:

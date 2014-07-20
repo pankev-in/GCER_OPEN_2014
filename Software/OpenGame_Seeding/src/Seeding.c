@@ -96,10 +96,8 @@ void loop() {
         delay(100);
     }
     */
-	Serial.println("Forward");
-	m2.forward(255);
-	delay(1000);
-	m2.brake();
+	grabBasePosition(90);
+	grabBasePosition(-90);
 	while(true){delay(1000);}
 }
 
@@ -189,10 +187,10 @@ void secondaryArmPosition(int angle){
 		Serial.println("Secondary Arm is not going to turn.");
 		Serial.print("Diff:");Serial.println(diff);
 	}
-	else if(diff<0){
+	else if(diff>0){
 		m1.forward(255);
 	}
-	else if(diff>0){
+	else if(diff<0){
 		m1.backward(255);
 	}
 	while(diff>5||diff<-5){

@@ -1,22 +1,3 @@
-#include <Arduino.h>
-#include <Roomba.h>
-#include <Servo.h>
-#include <Motor.h>
-void setup();
-void loop();
-void turnRight();
-void turnLeft();
-void turnAround();
-int bitShiftCombine( unsigned char x_high, unsigned char x_low);
-void primaryArmPosition(int Angle);
-void secondaryArmPosition(int angle);
-void grabBasePosition(int angle);
-int checkGrabAngle();
-int checkSecondaryArmAngle();
-void openGrab();
-void closeGrab();
-bool checkGrabTouch();
-#line 1 "src/Seeding.ino"
 /*
  	Program: GCER 2014 OPEN GAME - Double Al.
  	Member: Kalus Ableitinger , Kevin Pan
@@ -24,9 +5,9 @@ bool checkGrabTouch();
 */
 
 //External libraries:
-//#include <Roomba.h>
-//#include <Servo.h>
-//#include <Motor.h>
+#include <Roomba.h>
+#include <Servo.h>
+#include <Motor.h>
 
 //Pin connections:
 #define M1_EN_PIN 2

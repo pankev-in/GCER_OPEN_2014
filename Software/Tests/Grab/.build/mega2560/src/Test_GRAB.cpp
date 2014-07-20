@@ -10,7 +10,7 @@ void CloseGrab();
 Servo SERVO_GRAB;
 #define NUM_SERVO_GRAB_CLOSE 0
 #define NUM_SERVO_GRAB_OPEN 100
-#define SERVO_GRAB_PIN  7
+#define SERVO_GRAB_PIN  6
 void setup(){
   SERVO_GRAB.attach(SERVO_GRAB_PIN);
 }

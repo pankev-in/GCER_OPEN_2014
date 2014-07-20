@@ -63,61 +63,54 @@ Roomba roomba (&Serial1);
 Servo SERVO_FRONT;
 Servo SERVO_BACK;
 Servo SERVO_GRAB;
+Servo SERVO_DEFENCE;
 Motor m1;
 Motor m2;
+
+unsigned int u;
 
 void setup() {
     
     Serial.begin(9600);
     Serial.println("Serial communication established");
-	/*
     SERVO_FRONT.attach(SERVO_FRONT_PIN);
     SERVO_BACK.attach(SERVO_BACK_PIN);
     SERVO_GRAB.attach(SERVO_GRAB_PIN);
-    */
+	SERVO_DEFENCE.attach(SERVO_DEFENSE_PIN);
 	m1.attach(M1_EN_PIN, M1_INA_PIN, M1_INB_PIN);
 	m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
-	
-    //roomba.start();
-    //roomba.safeMode();
+    roomba.start();
+    roomba.safeMode();
     //roomba.fullMode();
 }
 
 void loop() {
-	/*
     Serial.println("aligning at gametable..");
-    romba.driveDirect(-50, -50);
-    
+    roomba.driveDirect(-150, -150);
 	primaryArmPosition(0);
-    secondaryArmPosition(120);
-    
-    delay(2000);
-    
-    roomba.driveDirect(0, 0);
-    
+    secondaryArmPosition(-45);
+	SERVO_DEFENCE.write(-45);
+	delay(1000);
+	roomba.driveDirect(0, 0);
+    /*
     Serial.println("waiting for light...");
     while(analogRead(LIGHT_SENSOR_PIN) > NUM_LIGHT_SENSOR_VALUE) delay(10);
     Serial.println("Go!");
-    
-    roomba.driveDirect(150, 150);
-    
+    */
+	delay(1000);
+    roomba.driveDirect(300,300);
     uint8_t buf[2];
-    while(roomba.getSensors(29, buf, 2)) {
-        
+    while(roomba.getSensors(31, buf, 2)) {
         u = bitShiftCombine(buf[0], buf[1]);
-        if(u >= 200) {
-            
+        if(u < 500) {
             break;
         }
-        
-        Serial.print("cliff value: ");
-        Serial.println(u);
-        delay(100);
     }
-    */
-	grabBasePosition(90);
-	grabBasePosition(-90);
-	while(true){delay(1000);}
+	roomba.driveDirect(0,0);
+	while(true){
+		Serial.println("looping");
+		delay(1000);
+	}
 }
 
 /*

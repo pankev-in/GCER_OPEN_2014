@@ -4,6 +4,7 @@
 #include <Motor.h>
 void setup();
 void loop();
+void robotComeBack();
 void turnRight();
 void turnLeft();
 void turnAround();
@@ -81,36 +82,59 @@ void setup() {
 	m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
     roomba.start();
     roomba.safeMode();
-    //roomba.fullMode();
 }
 
 void loop() {
-    Serial.println("aligning at gametable..");
+	secondaryArmPosition(-90);
+	grabBasePosition(0);
+	primaryArmPosition(10);
+	SERVO_DEFENCE.write(180);
+	openGrab();
+
+	Serial.println("aligning at gametable..");
+	roomba.driveDirect(-150,-150);
+	delay(4000);
+	roomba.driveDirect(150,150);
+	delay(1500);
+	turnRight();
     roomba.driveDirect(-150, -150);
-	primaryArmPosition(0);
-    secondaryArmPosition(-45);
-	SERVO_DEFENCE.write(-45);
-	delay(1000);
-	roomba.driveDirect(0, 0);
-    /*
+ 
+  
+	Serial.println("aligned");    
+    delay(1000);
+    
+    roomba.driveDirect(0, 0);
+   	
     Serial.println("waiting for light...");
-    while(analogRead(LIGHT_SENSOR_PIN) > NUM_LIGHT_SENSOR_VALUE) delay(10);
+//    while(analogRead(LIGHT_SENSOR_PIN) > NUM_LIGHT_SENSOR_VALUE) delay(10);
     Serial.println("Go!");
-    */
-	delay(1000);
-    roomba.driveDirect(300,300);
+    
+    roomba.driveDirect(300, 300);
     uint8_t buf[2];
-    while(roomba.getSensors(31, buf, 2)) {
+    while(roomba.getSensors(29, buf, 2)) {
         u = bitShiftCombine(buf[0], buf[1]);
         if(u < 500) {
             break;
         }
     }
+ 	roomba.driveDirect(0,0);
+    turnLeft();
+	grabBasePosition(45);
+	secondaryArmPosition(-40);
+	roomba.driveDirect(200,200);
+	delay(4000);
 	roomba.driveDirect(0,0);
-	while(true){
-		Serial.println("looping");
-		delay(1000);
-	}
+
+
+	SERVO_FRONT.detach();
+	SERVO_BACK.detach();
+	SERVO_DEFENCE.detach();	
+	SERVO_GRAB.detach();
+
+	delay(5000);
+	robotComeBack();
+	while(true){delay(1000);}
+
 }
 
 /*
@@ -124,6 +148,19 @@ void loop() {
 	METHOD: ROOMBA DRIVE
 ########################################
 */
+
+void robotComeBack(){
+	roomba.driveDirect(300,300);
+	delay(2500);
+	turnRight();
+	roomba.driveDirect(-150,-150);
+	delay(6000);
+	roomba.driveDirect(0,0);
+	roomba.driveDirect(150,150);
+	delay(500);
+	roomba.driveDirect(0,0);
+	turnLeft();
+}
 
 // Roomba Creat turns Right(Clock wise):
 // Status: TESTED

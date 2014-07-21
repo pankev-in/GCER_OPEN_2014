@@ -65,7 +65,7 @@ void setup() {
 }
 
 void loop() {
-	/*
+	
     Serial.println("aligning at gametable..");
     romba.driveDirect(-50, -50);
     
@@ -95,7 +95,9 @@ void loop() {
         Serial.println(u);
         delay(100);
     }
-    */
+    
+    turnLeft();
+    
 	grabBasePosition(90);
 	grabBasePosition(-90);
 	while(true){delay(1000);}
@@ -235,6 +237,7 @@ int checkGrabAngle() {
 // Returns the Angle of the secondary Arm:
 // Status: TESTED
 int checkSecondaryArmAngle(){
+    
    	int value=analogRead(POTENTIOMETER_1_PIN);
    	value=map(value,0,697,NUM_POTENTIOMETER_1_MIN_ANGLE,NUM_POTENTIOMETER_1_MAX_ANGLE);
    	return value;}

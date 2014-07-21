@@ -44,63 +44,77 @@ Roomba roomba (&Serial1);
 Servo SERVO_FRONT;
 Servo SERVO_BACK;
 Servo SERVO_GRAB;
+Servo SERVO_DEFENCE;
 Motor m1;
 Motor m2;
+
+unsigned int u;
 
 void setup() {
     
     Serial.begin(9600);
     Serial.println("Serial communication established");
-	/*
     SERVO_FRONT.attach(SERVO_FRONT_PIN);
     SERVO_BACK.attach(SERVO_BACK_PIN);
     SERVO_GRAB.attach(SERVO_GRAB_PIN);
-    */
+	SERVO_DEFENCE.attach(SERVO_DEFENSE_PIN);
 	m1.attach(M1_EN_PIN, M1_INA_PIN, M1_INB_PIN);
 	m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
-	
-    //roomba.start();
-    //roomba.safeMode();
-    //roomba.fullMode();
+    roomba.start();
+    roomba.safeMode();
 }
 
 void loop() {
-	
-    Serial.println("aligning at gametable..");
-    romba.driveDirect(-50, -50);
-    
-	primaryArmPosition(0);
-    secondaryArmPosition(120);
-    
-    delay(2000);
+	secondaryArmPosition(-90);
+	grabBasePosition(0);
+	primaryArmPosition(10);
+	SERVO_DEFENCE.write(180);
+	openGrab();
+
+	Serial.println("aligning at gametable..");
+	roomba.driveDirect(-150,-150);
+	delay(4000);
+	roomba.driveDirect(150,150);
+	delay(1500);
+	turnRight();
+    roomba.driveDirect(-150, -150);
+ 
+  
+	Serial.println("aligned");    
+    delay(1000);
     
     roomba.driveDirect(0, 0);
-    
+   	
     Serial.println("waiting for light...");
-    while(analogRead(LIGHT_SENSOR_PIN) > NUM_LIGHT_SENSOR_VALUE) delay(10);
+//    while(analogRead(LIGHT_SENSOR_PIN) > NUM_LIGHT_SENSOR_VALUE) delay(10);
     Serial.println("Go!");
     
-    roomba.driveDirect(150, 150);
-    
+    roomba.driveDirect(300, 300);
     uint8_t buf[2];
     while(roomba.getSensors(29, buf, 2)) {
-        
         u = bitShiftCombine(buf[0], buf[1]);
-        if(u >= 200) {
-            
+        if(u < 500) {
             break;
         }
-        
-        Serial.print("cliff value: ");
-        Serial.println(u);
-        delay(100);
     }
-    
+ 	roomba.driveDirect(0,0);
     turnLeft();
-    
-	grabBasePosition(90);
-	grabBasePosition(-90);
+	grabBasePosition(45);
+	secondaryArmPosition(-40);
+	roomba.driveDirect(200,200);
+	delay(4000);
+	roomba.driveDirect(0,0);
+
+
+	SERVO_FRONT.detach();
+	SERVO_BACK.detach();
+	SERVO_DEFENCE.detach();	
+	SERVO_GRAB.detach();
+
+	delay(5000);
+	robotComeBack();
 	while(true){delay(1000);}
+
 }
 
 /*
@@ -114,6 +128,19 @@ void loop() {
 	METHOD: ROOMBA DRIVE
 ########################################
 */
+
+void robotComeBack(){
+	roomba.driveDirect(300,300);
+	delay(2500);
+	turnRight();
+	roomba.driveDirect(-150,-150);
+	delay(6000);
+	roomba.driveDirect(0,0);
+	roomba.driveDirect(150,150);
+	delay(500);
+	roomba.driveDirect(0,0);
+	turnLeft();
+}
 
 // Roomba Creat turns Right(Clock wise):
 // Status: TESTED
@@ -164,6 +191,56 @@ int bitShiftCombine( unsigned char x_high, unsigned char x_low) {
 	METHOD: THE ROBOT ARM
 ########################################
 */
+
+void moveAll(int primaryArmPos, int secondaryArmPos, int grabBasePos, int grabPos, int defensePos) {
+
+    if(primaryArmPos > 45|| primaryArmPos < -45) return;
+    if(secondaryArmPos > NUM_POTENTIOMETER_1_MAX_ANGLE || secondaryArmPos < NUM_POTENTIOMETER_1_MIN_ANGLE) return;
+    if(grabBasePos > NUM_POTENTIOMETER_2_MAX_ANGLE || grabBasePos < NUM_POTENTIOMETER_2_MIN_ANGLE) return;
+    if(grabPos > 100 || grabPos < 0) return;
+    if(defensePos > 180 || defensePos < 0) return;
+
+    SERVO_FRONT.write(NUM_SERVO_FRONT_ZERO_DEGREE - primaryArmPos);
+    SERVO_BACK.write(NUM_SERVO_BACK_ZERO_DEGREE + primaryArmPos);
+    
+    SERVO_DEFENCE.write(defensePos);
+    
+    SERVO_GRAB.write(grabPos);
+  
+    int secondaryDiff = secondaryArmPos - checkSecondaryArmAngle();
+	if(secondaryDiff < 5 && secondaryDiff > -5){
+        
+		Serial.println("Secondary Arm is not going to turn.");
+		Serial.print("Diff:");Serial.println(secondaryDiff);
+	} else if(secondaryDiff > 0){
+        
+		m1.forward(255);
+	} else if(secondaryDiff < 0){
+		m1.backward(255);
+	}
+    
+    int grabDiff = grabBasePosition - checkGrabAngle();
+	if(grabDiff < 5 && grabDiff > -5){
+        
+		Serial.println("Grab is not going to turn.");
+		Serial.print("Diff:");Serial.println(grabDiff);
+	} else if(grabDiff < 0){
+		
+        m2.backward(200);
+	} else if(grabDiff > 0){
+        
+		m2.forward(200);
+	}
+    
+	while((grabDiff > 5 || grabDiff < -5) || (secondaryDiff > 5 || secondaryDiff < -5)){
+        
+        grabDiff = grabBasePos - checkGrabAngle();
+        secondaryDiff = secondaryArmPos - checkSecondaryArmAngle();
+        
+        if(secondaryDiff < 5 || secondaryDiff > -5) m1.break();
+        if(grabDiff < 5 || grabDiff > -5) m2.break();
+	}
+}
 
 // Turn Primary arm in to an specific angle between -45 to 45 degree:
 // Status: TESTED
@@ -237,7 +314,6 @@ int checkGrabAngle() {
 // Returns the Angle of the secondary Arm:
 // Status: TESTED
 int checkSecondaryArmAngle(){
-    
    	int value=analogRead(POTENTIOMETER_1_PIN);
    	value=map(value,0,697,NUM_POTENTIOMETER_1_MIN_ANGLE,NUM_POTENTIOMETER_1_MAX_ANGLE);
    	return value;}

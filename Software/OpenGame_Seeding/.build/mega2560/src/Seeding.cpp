@@ -9,6 +9,7 @@ void turnRight();
 void turnLeft();
 void turnAround();
 int bitShiftCombine( unsigned char x_high, unsigned char x_low);
+void moveAll(int primaryArmPos, int secondaryArmPos, int grabBasePos, int grabPos, int defensePos);
 void primaryArmPosition(int Angle);
 void secondaryArmPosition(int angle);
 void grabBasePosition(int angle);
@@ -81,7 +82,7 @@ void setup() {
 	m1.attach(M1_EN_PIN, M1_INA_PIN, M1_INB_PIN);
 	m2.attach(M2_EN_PIN, M2_INA_PIN, M2_INB_PIN);
     roomba.start();
-    roomba.safeMode();
+    roomba.fullMode();
 }
 
 void loop() {
@@ -117,6 +118,8 @@ void loop() {
             break;
         }
     }
+	Serial.print("Cliff Signal:");
+	Serial.println(u);
  	roomba.driveDirect(0,0);
     turnLeft();
 	grabBasePosition(45);
@@ -124,16 +127,13 @@ void loop() {
 	roomba.driveDirect(200,200);
 	delay(4000);
 	roomba.driveDirect(0,0);
-
-
-	SERVO_FRONT.detach();
-	SERVO_BACK.detach();
-	SERVO_DEFENCE.detach();	
-	SERVO_GRAB.detach();
-
 	delay(5000);
+	Serial.println("Robot Coming Back");
 	robotComeBack();
-	while(true){delay(1000);}
+	delay(3000);
+	Serial.println("Robot move all");
+	moveAll(0,0,-90,50,180);
+	while(true){Serial.println("looping");delay(1000);}
 
 }
 
@@ -211,6 +211,55 @@ int bitShiftCombine( unsigned char x_high, unsigned char x_low) {
 	METHOD: THE ROBOT ARM
 ########################################
 */
+
+void moveAll(int primaryArmPos, int secondaryArmPos, int grabBasePos, int grabPos, int defensePos) {
+
+    if(primaryArmPos > 45|| primaryArmPos < -45){Serial.println("Break"); return;}
+    if(secondaryArmPos > NUM_POTENTIOMETER_1_MAX_ANGLE || secondaryArmPos < NUM_POTENTIOMETER_1_MIN_ANGLE){Serial.println("Break");  return;}
+    if(grabBasePos > NUM_POTENTIOMETER_2_MAX_ANGLE || grabBasePos < NUM_POTENTIOMETER_2_MIN_ANGLE){Serial.println("Break");  return;}
+    if(grabPos > 100 || grabPos < 0){Serial.println("Break");  return;}
+    if(defensePos > 180 || defensePos < 0){Serial.println("Break");  return;}
+
+    SERVO_FRONT.write(NUM_SERVO_FRONT_ZERO_DEGREE - primaryArmPos);
+    SERVO_BACK.write(NUM_SERVO_BACK_ZERO_DEGREE + primaryArmPos);
+    
+    SERVO_DEFENCE.write(defensePos);
+    
+    SERVO_GRAB.write(grabPos);
+  
+    int secondaryDiff = secondaryArmPos - checkSecondaryArmAngle();
+	if(secondaryDiff < 5 && secondaryDiff > -5){
+        
+		Serial.println("Secondary Arm is not going to turn.");
+		Serial.print("Diff:");Serial.println(secondaryDiff);
+	} else if(secondaryDiff > 0){
+        
+		m1.forward(255);
+	} else if(secondaryDiff < 0){
+		m1.backward(255);
+	}
+	int grabDiff = grabBasePos-checkGrabAngle();   
+	if(grabDiff < 5 && grabDiff > -5){
+        
+		Serial.println("Grab is not going to turn.");
+		Serial.print("Diff:");Serial.println(grabDiff);
+	} else if(grabDiff < 0){
+		
+        m2.backward(200);
+	} else if(grabDiff > 0){
+        
+		m2.forward(200);
+	}
+    
+	while((grabDiff > 5 || grabDiff < -5) || (secondaryDiff > 5 || secondaryDiff < -5)){
+        
+        grabDiff = grabBasePos - checkGrabAngle();
+        secondaryDiff = secondaryArmPos - checkSecondaryArmAngle();
+        
+        if(secondaryDiff < 5 || secondaryDiff > -5){m1.brake();}
+        if(grabDiff < 5 || grabDiff > -5) {m2.brake();}
+	}
+}
 
 // Turn Primary arm in to an specific angle between -45 to 45 degree:
 // Status: TESTED

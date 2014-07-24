@@ -137,7 +137,7 @@ while True:
 			savePressed=False;
 		print "Save not Pressed"
 	
-	OutputString=str(B1)+";"+str(B2)+";"+str(B3)+";"+str(B4)+";"+str(S1)+";"+str(S2)+";"+str(S3)+";"+str(S4)+";"+str(S5)+"\n" 
+	OutputString="#"+str(B1)+";"+str(B2)+";"+str(B3)+";"+str(B4)+";"+str(S1)+";"+str(S2)+";"+str(S3)+";"+str(S4)+";"+str(S5)+"\n" 
 	print OutputString;
 	arduino.write(OutputString);
 

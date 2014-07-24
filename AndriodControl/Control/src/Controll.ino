@@ -82,9 +82,11 @@ void loop() {
     
     //wait until the data completly comes:
     if (stringComplete) {
+
+		inputString=inputString.substring(1,inputString.length());
         int index[9];
         index[0]=inputString.indexOf(";");
-        for(int i=1;i<=8;i++){
+        for(int i=1;i<=7;i++){
             index[i]=inputString.indexOf(";",index[i-1]+1);
         }
         
@@ -96,7 +98,7 @@ void loop() {
         secondary_arm_angle=inputString.substring(index[4]+1,index[5]).toInt();
         defence_arm_angle=inputString.substring(index[5]+1,index[6]).toInt();
         grab_base_angle=inputString.substring(index[6]+1,index[7]).toInt();
-        grab_angle=inputString.substring(index[7]+1,index[8]).toInt();
+        grab_angle=inputString.substring(index[7]+1,inputString.length()).toInt();
         
         
         if(back==0&&go==1&&left==0&right==0){
@@ -134,7 +136,12 @@ void serialEvent(){
     	// if the incoming character is a newline, set a flag
     	// so the main loop can do something about it:
     	if (inChar == '\n') {
-      	stringComplete = true;
+			if(inputString[0]=='#'){
+				stringComplete = true;
+			}
+			else{
+				inputString="";
+			}
     } 
   }
 }

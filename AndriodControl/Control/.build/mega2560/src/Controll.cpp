@@ -7,6 +7,7 @@ void loop();
 void serialEvent();
 String getValue(String data, char separator, int index);
 void moveAll(int primaryArmPos, int secondaryArmPos, int grabBasePos, int grabPos, int defensePos);
+void primaryArmPosition(int Angle);
 void secondaryArmPosition(int angle);
 void grabBasePosition(int angle);
 int checkGrabAngle();
@@ -38,7 +39,7 @@ int checkSecondaryArmAngle();
 #define POTENTIOMETER_2_PIN  2
 
 //Constants:
-#define NUM_SERVO_FRONT_ZERO_DEGREE 90
+#define NUM_SERVO_FRONT_ZERO_DEGREE 85
 #define NUM_SERVO_BACK_ZERO_DEGREE 95
 #define NUM_SERVO_GRAB_CLOSE 0
 #define NUM_SERVO_GRAB_OPEN 100
@@ -113,25 +114,29 @@ void loop() {
         grab_angle=inputString.substring(index[7]+1,index[8]).toInt();
         
         
-        if(back==0&&go==1&&left==0&right==0){
+        if(back==0&&go==1&&left==0&&right==0){
             roomba.driveDirect(200,200);
         }
-        else if(back==1&&go==0&&left==0&right==0){
+        else if(back==1&&go==0&&left==0&&right==0){
             roomba.driveDirect(-200,-200);
         }
-        else if(back==0&&go==0&&left==1&right==0){
+        else if(back==0&&go==0&&left==1&&right==0){
             roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceCounterClockwise);
         }
-        else if(back==0&&go==0&&left==0&right==1){
+        else if(back==0&&go==0&&left==0&&right==1){
             roomba.drive(NUM_ROOMBA_TURN_SPEED, roomba.DriveInPlaceClockwise);
         }
         else{
             roomba.driveDirect(0,0);
         }
+
+		SERVO_DEFENCE.write(defence_arm_angle);
+		primaryArmPosition(primary_arm_angle);
 		/*
         moveAll(primary_arm_angle,secondary_arm_angle,grab_base_angle,grab_angle,defence_arm_angle);
 		*/
-		//Serial.println(inputString);
+		Serial.println("\n\n");
+		Serial.println(inputString);
 		Serial.print("Go:");Serial.print(go);Serial.print("Back:");Serial.print(back);Serial.print("Left:");Serial.print(left);Serial.print("Right");Serial.println(right);
 		// clear the string:
         inputString = "";
@@ -217,6 +222,19 @@ void moveAll(int primaryArmPos, int secondaryArmPos, int grabBasePos, int grabPo
         if(grabDiff < 5 || grabDiff > -5)
             m2.brake();
 	}
+}
+
+
+// Turn Primary arm in to an specific angle between -45 to 45 degree:
+// Status: TESTED
+void primaryArmPosition(int Angle) {
+    
+  if(Angle > 45||Angle < -45) return;
+  else{
+      
+	SERVO_FRONT.write(NUM_SERVO_FRONT_ZERO_DEGREE - Angle);
+ 	SERVO_BACK.write(NUM_SERVO_BACK_ZERO_DEGREE - Angle);
+  }
 }
 
 // Turn Secondary arm in to an specific angle between -110 to 110 degree:

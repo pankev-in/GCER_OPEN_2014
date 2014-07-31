@@ -1,0 +1,14 @@
+
+
+
+
+
+.build/mega2560/src/GCER2014_OPEN.cpp : src/GCER2014_OPEN.ino
+	@mkdir -p .build/mega2560/src
+	@echo [93msrc/GCER2014_OPEN.ino[0m
+	@/usr/local/bin/ino preproc  -o $@ $^
+
+
+all : .build/mega2560/src/GCER2014_OPEN.cpp
+	@true
+

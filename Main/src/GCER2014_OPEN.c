@@ -52,7 +52,7 @@ Motor m2;
 int x;
 unsigned int u;
 
-/*
+ /*
  ##############################################################################################
  ##                                                                                          ##
  ##                                    Main Program                                          ##
@@ -161,7 +161,11 @@ void loop(){
     primaryArmPosition(45);
     secondaryArmPositionMIN();
     
-    
+    /*
+    #####################################################
+     STAGE3: GET THE HANGERS FORM THE CENTRAL RACK
+    #####################################################
+    */
     
 
 

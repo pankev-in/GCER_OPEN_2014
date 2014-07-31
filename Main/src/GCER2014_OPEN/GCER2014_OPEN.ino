@@ -52,7 +52,7 @@ Motor m2;
 int x;
 unsigned int u;
 
-/*
+ /*
  ##############################################################################################
  ##                                                                                          ##
  ##                                    Main Program                                          ##
@@ -161,7 +161,11 @@ void loop(){
     primaryArmPosition(45);
     secondaryArmPositionMIN();
     
-    
+    /*
+    #####################################################
+     STAGE3: GET THE HANGERS FORM THE CENTRAL RACK
+    #####################################################
+    */
     
 
 
@@ -404,10 +408,10 @@ void SensorValue(){
 }
 
 void disableEverything(){
-    sf.detach(4);
-    sb.detach(5);
-    sg.detach(6);
-    sd.detach(7);
+    //sf.detach(4);
+    //sb.detach(5);
+    //sg.detach(6);
+    //sd.detach(7);
     roomba.driveDirect(0,0);
 }
 
